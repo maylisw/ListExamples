@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener  {
     private ArrayList<Books> booksToRead;
@@ -34,11 +37,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void createBooks() {
-        booksToRead.add(new Books("Les Miserables", "Victor Hugo", R.drawable.lesmise));
-        booksToRead.add(new Books("The Count of Monte Cristo", "Alexander Dumas", R.drawable.countofmontecristo));
-        booksToRead.add(new Books("The Three Musketeers", "Alexander Dumas", R.drawable.threemusketeers));
-        booksToRead.add(new Books("Anna Karenina", "Leo Tolstoy", R.drawable.annakarenia));
-        booksToRead.add(new Books("War and Peace", "Leo Tolstoy", R.drawable.warandpeace));
+        booksToRead.add(new Books("Les Miserables", "Victor Hugo", R.drawable.lesmise, 3));
+        booksToRead.add(new Books("The Count of Monte Cristo", "Alexander Dumas", R.drawable.countofmontecristo, 2));
+        booksToRead.add(new Books("The Three Musketeers", "Alexander Dumas", R.drawable.threemusketeers, 5));
+        booksToRead.add(new Books("Anna Karenina", "Leo Tolstoy", R.drawable.annakarenia, 1));
+        booksToRead.add(new Books("War and Peace", "Leo Tolstoy", R.drawable.warandpeace, 4));
+        Collections.sort(booksToRead);
     }
 
     private void wireWidgets() {
@@ -73,6 +77,39 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 return true;
             default:
                 return super.onContextItemSelected(item);
+        }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.sorting, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.name:
+                Collections.sort(booksToRead, new Comparator<Books>() {
+                    @Override
+                    public int compare(Books books, Books t1) {
+                        return books.getName().toLowerCase().compareTo(t1.getName());
+                    }
+                });
+                adapter.notifyDataSetChanged();
+                return true;
+            case R.id.rank:
+                Collections.sort(booksToRead, new Comparator<Books>() {
+                    @Override
+                    public int compare(Books books, Books t1) {
+                        return books.getName().toLowerCase().compareTo(t1.getName());
+                    }
+                });
+                adapter.notifyDataSetChanged();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
